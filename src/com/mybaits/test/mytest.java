@@ -298,4 +298,100 @@ public class mytest {
 			session.close(); 
 		}
 	}
+	
+	@Test
+	public void test9() throws IOException {
+		String resource = "mybatis-config.xml"; 
+		InputStream inputStream = Resources.getResourceAsStream(resource); 
+		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+		
+		SqlSession session = sqlSessionFactory.openSession(); 
+		try { 
+			//一级缓存
+			employeemapper mapper = session.getMapper(employeemapper.class);
+			Employee employee = mapper.getempbyId(4);
+			
+			//1增删改清空缓存
+//			employeemapper mapper3 = session.getMapper(employeemapper.class);
+//			mapper3.insertemp(new Employee(null, "xiaohua", "1", "xiaohua@com"));
+			//2手动清除
+//			session.clearCache();
+			//3不同session
+			
+			//4session相同,查询条件不同
+			
+			
+			employeemapper mapper2 = session.getMapper(employeemapper.class);
+			Employee employee2 = mapper2.getempbyId(4);
+			
+			System.out.println(employee==employee2);
+			}finally {
+				
+				session.close();
+			}
+		}
+	
+	
+	@Test//二级缓存
+	public void test10() throws IOException {
+		String resource = "mybatis-config.xml"; 
+		InputStream inputStream = Resources.getResourceAsStream(resource); 
+		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+		
+		SqlSession session = sqlSessionFactory.openSession(); 
+		SqlSession session2 = sqlSessionFactory.openSession();
+		
+		//二级缓存
+		 /**
+		  * 1.seting 设置开启缓存
+		  * 2.namespace  开启缓存
+		  * 3.POJO  序列化
+		  */
+		try {
+			employeemapper mapper = session.getMapper(employeemapper.class);
+			employeemapper mapper2 = session2.getMapper(employeemapper.class);
+			
+			Employee employee = mapper.getempbyId(4);
+			System.out.println(employee);
+			session.close();
+			
+			Employee employee2 = mapper2.getempbyId(4);
+			System.out.println(employee2);
+			session.close();
+			
+			
+		}finally {
+			
+			
+			}
+		}
+	
+	
+	@Test//ehcache
+	public void test11() throws IOException {
+		String resource = "mybatis-config.xml"; 
+		InputStream inputStream = Resources.getResourceAsStream(resource); 
+		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+		
+		SqlSession session = sqlSessionFactory.openSession(); 
+		SqlSession session2 = sqlSessionFactory.openSession();
+		
+		try {
+			depmapper mapper = session.getMapper(depmapper.class);
+			Dep dep = mapper.getdepbyid(2);
+			System.out.println(dep);
+			session.close();
+			
+			
+			depmapper mapper2 = session2.getMapper(depmapper.class);
+			Dep dep2 = mapper2.getdepbyid(2);
+			System.out.println(dep2);
+			session2.close();
+			
+			System.out.println(dep==dep2);
+		}finally {
+			
+		}
+          
+	}
 }

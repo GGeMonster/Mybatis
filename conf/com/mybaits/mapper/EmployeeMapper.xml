@@ -2,6 +2,18 @@
  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mybaits.mapper.employeemapper">
+      <!-- 开启二级缓存 -->
+        <cache eviction="LRU"  readOnly="false" size="1024" flushInterval="60000" ></cache>
+        <!--
+          eviction：缓存回收策略
+          flushInterval：缓存刷新时间
+          readOnly：缓存是否只读  true  只读不安全    false 默认 反序列化
+          size：缓存存放元素
+          type：自定义缓存类型全类型    实现Cache接口
+          blocking=""
+          -->
+        
+        
       <!-- 级联属性 -->
        <resultMap type="com.mybaits.Employee" id="employsimpl">
          <id column="id" property="id"/>
@@ -217,8 +229,6 @@
 		  </insert>
 		  
 		  <insert id="addEmployees2" parameterType="com.mybaits.Employee">
-		  
-		  
 		      insert  into   tbl_employee  (last_name,gender,email)
 		      values 
 		    <foreach collection="emps" item="emp" separator=",">

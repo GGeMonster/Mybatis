@@ -4,9 +4,13 @@
 <configuration>
   <properties resource="jdbc.properties"> </properties>
   <settings>
+  <!-- 驼峰命名 -->
   <setting name="mapUnderscoreToCamelCase" value="true"/>
+  <!-- 懒加载 -->
   <setting name="lazyLoadingEnabled" value="true"/>
    <setting name="aggressiveLazyLoading" value="false"/>
+   <!-- 二级缓存 -->
+   <setting name="cacheEnabled" value="true"/>
   </settings>
 	<environments default="development">
 		<environment id="development">
@@ -20,7 +24,8 @@
 		</environment>
 	</environments>
 	<mappers>
-		<mapper resource="EmployeeMapper.xml" />
-		<mapper resource="DepMapper.xml" />
+		<!-- <mapper resource="EmployeeMapper.xml" />
+		<mapper resource="DepMapper.xml" /> -->
+		<package name="com.mybaits.mapper"/>
 	</mappers>
 </configuration>

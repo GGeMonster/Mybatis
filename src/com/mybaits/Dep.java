@@ -1,9 +1,14 @@
 package com.mybaits;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Dep {
+public class Dep   implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private  Integer  id;
 	private  String deptName;
 	private  List<Employee> employees;
