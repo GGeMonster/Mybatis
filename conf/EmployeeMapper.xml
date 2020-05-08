@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?> <!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybaits.mapper.employeemapper">
+      <!-- 级联属性 -->
+       <resultMap type="com.mybaits.Employee" id="employsimpl">
+         <id column="id" property="id"/>
+         <result column="last_Name" property="lastName"/>
+         <result column="gender" property="gender"/>
+         <result column="email" property="email"/>
+         <result column="bid" property="dep.id"/>
+         <result column="deptNmae" property="dep.deptName"/>
+       </resultMap>
+
+       <select id="getemployeebyid"  resultMap="employsimpl">
+       select  a.id  id,a.last_name lastName ,a.gender  gender ,a.email email ,
+       a.dept_id deptid ,b.id bid, b.dept_name deptNmae
+         from tbl_employee  a,tbl_dep b  where  a.dept_id=b.id  and a.id = #{id} 
+       </select>
+       
+       
+       <!-- association指定联合对象 -->
+       <resultMap type="com.mybaits.Employee" id="employdif">
+         <id column="id" property="id"/>
+         <result column="last_Name" property="lastName"/>
+         <result column="gender" property="gender"/>
+         <result column="email" property="email"/>
+        <association property="dep" javaType="com.mybaits.Dep">
+          <id column="id" property="id"/>
+          <result column="dept_name" property="deptName"/>
+        </association>
+       </resultMap>
+       
+         <select id="getemployeeAssociationbyid" resultMap="employdif">
+          select  *  from   tbl_employee  a  left  join  tbl_dep  b 
+           on  a.dept_id=b.id  where  a.id=#{id} 
+         </select>
+         
+          <!--  association  分布查询  -->
+          
+          <resultMap type="com.mybaits.Employee" id="employdiff">
+         <id column="id" property="id"/>
+         <result column="last_Name" property="lastName"/>
+         <result column="gender" property="gender"/>
+         <result column="email" property="email"/>
+        <association property="dep" 
+        select="com.mybaits.mapper.depmapper.getdepbyid"
+        column="dept_id">
+        </association>
+       </resultMap>
+          
+         <select id="getemployeeAssociationFbbyid" resultMap="employdiff">
+         select  *  from   tbl_employee  a  left  join  tbl_dep  b 
+           on  a.dept_id=b.id  where  a.id=#{id} 
+         </select>
+         
+         
+         <resultMap type="com.mybaits.Employee" id="employdis">
+         <id column="id" property="id"/>
+         <result column="last_Name" property="lastName"/>
+         <result column="gender" property="gender"/>
+         <result column="email" property="email"/>
+         <discriminator javaType="string" column="gender">
+            <case value="0" resultType="com.mybaits.Employee"><!-- 必须写 resultType-->
+            <association property="dep" 
+              select="com.mybaits.mapper.depmapper.getdepbyid"
+               column="dept_id">
+             </association>
+            </case>
+            <case value="1" resultType="com.mybaits.Employee">
+            <result column="last_name" property="lastName"/>
+            <result column="gender" property="gender"/>
+              <result column="last_name" property="email"/>
+              
+            </case>
+         </discriminator>
+        </resultMap>
+         
+         
+         <select id="getemplodeptid" resultMap="employdis">
+           select  *  from   tbl_employee    
+         </select>
+       
+
+
+	     <select  id="getempbyId"	resultType="com.mybaits.Employee">
+		 select  *  from tbl_employee  where  id = #{id} 
+		  </select>
+		  
+		  <select  id="getempbylastNamelikelist"	resultType="com.mybaits.Employee">
+		
+		  select * from tbl_employee where  last_name like #{lastname}
+		  </select>
+		  
+		  
+		  <select  id="getempbylastNamelike"	resultType="com.mybaits.Employee">
+		
+		  select * from tbl_employee where  last_name like #{lastname}
+		  </select>
+		  
+		  <select  id="getempbyIdandname"	resultType="com.mybaits.Employee">
+		<!-- select * from tbl_employee where id = #{param1}  and last_name=#{param2} --> 
+		  select * from tbl_employee where id = #{id}  and last_name=#{lastname}
+		  </select>
+		  
+		  <select id="getemployeebydeptid" resultType="com.mybaits.Employee">
+		  select * from tbl_employee where dept_id=#{id}
+		  </select>
+		  
+		  
+		  
+		  <insert id="insertemp"  parameterType="com.mybaits.Employee" >
+		    insert  into   tbl_employee  (last_name,gender,email)
+		    value (#{lastName},#{gender},#{email})
+		  </insert>
+		  
+		  <update id="updateemp"  parameterType="com.mybaits.Employee" >
+		       update    tbl_employee   set  last_name=#{lastName}  where  id=#{id}
+		  </update>
+		  
+		  <delete id="deletetemp">
+		        delete   from    tbl_employee   where  id=#{id}
+		  </delete>
+		  
+		  
+		  
+		  
+		  <!-- if /where-->
+		  <select id="getemployee" resultType="com.mybaits.Employee">
+		    select  *  from tbl_employee 
+		     <where >  
+		     <if test="id!=null">
+		     id = #{id}
+		     </if>
+		      <if test="lastName!=null">
+		      and last_name=#{lastName}
+		      </if>
+		      <if test="gender!=null">
+		       and gender=#{gender}
+		      </if>
+		      <if test="email!=null">
+		       and email=#{email}
+		      </if>
+		      
+		      </where>
+		  </select>
+		  
+		  
+		  <!-- strim -->
+		  <select id="getemployeetrim" resultType="com.mybaits.Employee">
+		         select  *  from tbl_employee 
+		     <trim prefix="where" suffixOverrides="and"> 
+		     <if test="id!=null">
+		     id = #{id}  and
+		     </if>
+		      <if test="lastName!=null">
+		       last_name=#{lastName}  and
+		      </if>
+		      <if test="gender!=null">
+		        gender=#{gender}  and
+		      </if>
+		      <if test="email!=null">
+		        email=#{email}
+		      </if>
+		      </trim>
+		      
+		  </select>
+		  
+		  
+		  <!-- getemployeechoose -->
+		  <select id="getemployeechoose" resultType="com.mybaits.Employee">
+		  select  *  from tbl_employee 
+		     <trim prefix="where" suffixOverrides="and"> 
+		      <choose>
+		     <when test="id!=null">id = #{id}</when>
+		      <when test="lastName!=null">last_name = #{lastName}</when>
+		       <when test="gender!=null">gender = #{gender}</when>
+		       <when test="email!=null">email = #{email}</when>
+		       <otherwise>dept_id=2</otherwise>
+		     </choose>
+		      </trim>
+		  </select>
+		  
+		  <!-- set -->
+		  
+		  <update id="updateSetemp" parameterType="com.mybaits.Employee">
+		        update    tbl_employee    
+		        <set >
+		           <if test="lastName!=null">last_name = #{lastName},</if>
+		           <if test="gender!=null">gender = #{gender},</if>
+		           <if test="email!=null">email = #{email},</if>
+		        </set>
+		          where  id=#{id}
+		  <!-- 也可以用trim标签 -->
+		  </update>
+		  
+		  <!-- foreach -->
+		  <select id="getemployeeforeach" resultType="com.mybaits.Employee">
+		    select  *  from tbl_employee  where dept_id in
+		      <foreach collection="arrs" item="arr" separator="," open="(" close=")">
+		         #{arr}
+		      </foreach>
+		  </select>
+		  <!-- sql片段 -->
+		  <sql id="comment">last_name,gender,email</sql>
+		  
+		  <!-- 批量保存 -->
+		  <insert id="addEmployees" parameterType="com.mybaits.Employee">
+		  <!-- Mysql  设置allowMultiQueries=true -->
+		  <foreach collection="emps" item="emp" separator=";">
+		      insert  into   tbl_employee  (
+		      <include refid="comment"></include>
+		      )
+		    value (#{emp.lastName},#{emp.gender},#{emp.email})
+		  </foreach>
+		    
+		  </insert>
+		  
+		  <insert id="addEmployees2" parameterType="com.mybaits.Employee">
+		  
+		  
+		      insert  into   tbl_employee  (last_name,gender,email)
+		      values 
+		    <foreach collection="emps" item="emp" separator=",">
+		    (#{emp.lastName},#{emp.gender},#{emp.email})
+		    </foreach>
+		    
+		  </insert>
+		  
+</mapper>
