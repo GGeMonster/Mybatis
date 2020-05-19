@@ -3,13 +3,14 @@ package com.mybaits.mapper;
 import java.sql.Array;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
-
 import com.mybaits.Employee;
 
+
 public interface employeemapper {
+	
+	public List<Employee>  getempAll();
 	
 	public  Employee  getempbyId(Integer id);
 	

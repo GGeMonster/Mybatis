@@ -101,7 +101,11 @@
 		  
 		  <select  id="getempbylastNamelikelist"	resultType="com.mybaits.Employee">
 		
-		  select * from tbl_employee where  last_name like #{lastname}
+		  select * from  tbl_employee where  last_name like #{lastname}
+		  </select>
+		  
+		  <select id="getempAll" resultType="com.mybaits.Employee">
+		  select * from  tbl_employee
 		  </select>
 		  
 		  

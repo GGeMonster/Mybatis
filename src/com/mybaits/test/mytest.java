@@ -17,6 +17,9 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Test;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.mybaits.Dep;
 import com.mybaits.Employee;
 import com.mybaits.mapper.depmapper;
@@ -29,7 +32,6 @@ public class mytest {
 		String resource = "mybatis-config.xml"; 
 		InputStream inputStream = Resources.getResourceAsStream(resource); 
 		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-		
 		
 		
 		SqlSession session = sqlSessionFactory.openSession(); 
@@ -391,6 +393,48 @@ public class mytest {
 			System.out.println(dep==dep2);
 		}finally {
 			
+		}
+          
+	}
+	
+	
+	
+	@Test//分页
+	public void test12() throws IOException {
+		String resource = "mybatis-config.xml"; 
+		InputStream inputStream = Resources.getResourceAsStream(resource); 
+		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+		
+		SqlSession session = sqlSessionFactory.openSession(); 
+		
+		try {
+			employeemapper mapper = session.getMapper(employeemapper.class);
+            Page<Object> page = PageHelper.startPage(2, 5);
+			
+            List<Employee> getempAll = mapper.getempAll();
+			//传入要连续显示多少页
+			PageInfo<Employee> info = new PageInfo<>(getempAll, 5);
+			for (Employee employee : getempAll) {
+				System.out.println(employee);
+			}
+			/*System.out.println("当前页码："+page.getPageNum());
+			System.out.println("总记录数："+page.getTotal());
+			System.out.println("每页的记录数："+page.getPageSize());
+			System.out.println("总页码："+page.getPages());*/
+			///xxx
+			System.out.println("当前页码："+info.getPageNum());
+			System.out.println("总记录数："+info.getTotal());
+			System.out.println("每页的记录数："+info.getPageSize());
+			System.out.println("总页码："+info.getPages());
+			System.out.println("是否第一页："+info.isIsFirstPage());
+			System.out.println("连续显示的页码：");
+			int[] nums = info.getNavigatepageNums();
+			for (int i = 0; i < nums.length; i++) {
+				System.out.println(nums[i]);
+			}
+			
+		}finally {
+			session.close();
 		}
           
 	}

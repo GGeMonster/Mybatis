@@ -10,6 +10,9 @@
 	<classpathentry kind="lib" path="lib/mybatis-ehcache-1.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.6.2.jar"/>
+	<classpathentry kind="lib" path="lib/pagehelper-5.0.0-rc.jar" sourcepath="D:/F/eclipse64Workspaces/Mybatis/lib/pagehelper-5.0.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/pagehelper-5.0.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/jsqlparser-0.9.5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
